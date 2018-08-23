@@ -1,9 +1,15 @@
+#include "SevenSegmentTM1637.h"
+
+const byte PIN_CLK = 4; 
+const byte PIN_DIO = 5;
+SevenSegmentTM1637    display(PIN_CLK, PIN_DIO);
+
 int ldr1=A0;
 int ldr2=A1;
 bool goalDetected = false;
 int resumeButton=5;
 int resetButton=4;
-int count=0;
+uint8_t count=0;
 
 
 void setup() {
@@ -13,6 +19,10 @@ void setup() {
   pinMode(ldr2,INPUT);
   pinMode(resumeButton,INPUT_PULLUP);
   pinMode(resetButton,INPUT_PULLUP);
+  display.begin();
+  display.setBacklight(100);
+  display.print("INIT");
+  delay(1000);
 }
 
 int ldr1Value()
@@ -30,6 +40,8 @@ void loop() {
   // put your main code here, to run repeatedly:
   Serial.println(ldr1Value());
   Serial.println(ldr2Value());
+
+  display.print(count);
  
  // Serial.println(digitalRead(resumeButton));
   delay(1000);
@@ -40,6 +52,10 @@ void loop() {
       Serial.println();
       Serial.println(count);
       Serial.println("GOAL!!");
+      display.clear();
+      display.print("GOAL");
+      delay(1000);
+      display.print(count);
       
     }
   }
@@ -55,5 +71,8 @@ void loop() {
       count=0;
       goalDetected=false;
       Serial.println("Game Reset");
+      display.print("Over");
+      delay(1000);
+      display.print(count);
       }
 }
